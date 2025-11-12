@@ -17,5 +17,5 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GENSPARK_C7767 }}
-          projectId: genspark-c7767
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KUTIKOMI_F1E8B }}
+          projectId: kutikomi-f1e8b
