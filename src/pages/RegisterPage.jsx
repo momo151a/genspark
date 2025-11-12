@@ -5,10 +5,9 @@ import { useToast } from '../hooks/useToast';
 
 export function RegisterPage() {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    name: '',
     age: ''
   });
   const [loading, setLoading] = useState(false);
@@ -25,14 +24,8 @@ export function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
-    if (formData.password !== formData.confirmPassword) {
-      showError('Passwords do not match');
-      return;
-    }
-
     if (formData.password.length < 6) {
-      showError('Password must be at least 6 characters');
+      showError('パスワードは6文字以上で入力してください');
       return;
     }
 
@@ -43,100 +36,105 @@ export function RegisterPage() {
         formData.email,
         formData.password,
         formData.name,
-        parseInt(formData.age)
+        formData.age ? parseInt(formData.age) : null
       );
-      success('Registration successful! Welcome to CareMé Beauty.');
+      success('登録が完了しました！');
       navigate('/');
     } catch (err) {
-      showError(err.message || 'Registration failed. Please try again.');
+      showError(err.message || '登録に失敗しました');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleCancel = () => {
+    navigate('/');
+  };
+
   return (
-    <div className="auth-page">
-      <div className="container">
-        <div className="auth-card">
-          <h2>Register</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              />
-            </div>
+    <div className="min-h-screen pt-24 sm:pt-28 bg-mistyrose-gradient flex items-center justify-center">
+      <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-xl">
+        <h2 className="text-2xl font-light mb-6 text-gray-700">新規登録</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-600 text-sm mb-2">お名前</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              className="w-full px-4 py-2.5 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+            />
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              />
-            </div>
+          <div className="mb-4">
+            <label className="block text-gray-600 text-sm mb-2">メールアドレス</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              className="w-full px-4 py-2.5 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+            />
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="age">Age</label>
-              <input
-                type="number"
-                id="age"
-                name="age"
-                value={formData.age}
-                onChange={handleChange}
-                required
-                min="13"
-                max="120"
-                disabled={loading}
-              />
-            </div>
+          <div className="mb-4">
+            <label className="block text-gray-600 text-sm mb-2">パスワード</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              minLength="6"
+              disabled={loading}
+              className="w-full px-4 py-2.5 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+            />
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                minLength="6"
-                disabled={loading}
-              />
-            </div>
+          <div className="mb-6">
+            <label className="block text-gray-600 text-sm mb-2">年齢（任意）</label>
+            <input
+              type="number"
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              min="1"
+              max="120"
+              disabled={loading}
+              className="w-full px-4 py-2.5 border border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-neutral-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+            />
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              />
-            </div>
-
-            <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-              {loading ? 'Registering...' : 'Register'}
+          <div className="flex space-x-3">
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 bg-gradient-to-r from-rose-200 to-rose-300 text-white py-2.5 rounded-full hover:from-rose-300 hover:to-rose-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? '登録中...' : '登録する'}
             </button>
-          </form>
+            <button
+              type="button"
+              onClick={handleCancel}
+              disabled={loading}
+              className="flex-1 bg-gray-100 text-gray-600 py-2.5 rounded-full hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              キャンセル
+            </button>
+          </div>
+        </form>
 
-          <p className="auth-link">
-            Already have an account? <Link to="/login">Login here</Link>
-          </p>
-        </div>
+        <p className="text-center mt-6 text-sm text-gray-600">
+          すでにアカウントをお持ちの方は{' '}
+          <Link to="/login" className="text-rose-500 hover:text-rose-700 font-medium">
+            ログイン
+          </Link>
+        </p>
       </div>
     </div>
   );
