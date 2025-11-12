@@ -7,23 +7,23 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
-import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <div className="app">
+        <div className="min-h-screen flex flex-col">
           <Header />
-          <main className="main-content">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/products" element={<ProductsPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/ranking" element={<div className="pt-28">Ranking Page Coming Soon</div>} />
+            <Route path="/category/:category" element={<div className="pt-28">Category Page Coming Soon</div>} />
+            <Route path="/product/:slug" element={<div className="pt-28">Product Page Coming Soon</div>} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
           <Footer />
         </div>
       </AuthProvider>
