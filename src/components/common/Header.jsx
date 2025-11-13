@@ -103,7 +103,7 @@ export function Header() {
         </div>
 
         {/* Navigation Tabs - Horizontal Scroll on Mobile */}
-        <nav className="border-t border-rose-100">
+        <nav className="hidden sm:block border-t border-rose-100">
           <div className="overflow-x-auto scrollbar-hide">
             <div className="flex whitespace-nowrap px-4 sm:px-6">
               {NAVIGATION_ITEMS.map((item) => {

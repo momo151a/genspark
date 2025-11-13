@@ -8,7 +8,8 @@
 /* Base Styles */
 @layer base {
   * {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
   }
 
   body {
@@ -34,7 +35,7 @@
 
   /* Star Rating */
   .star-rating {
-    @apply text-yellow-400;
+    color: #ffd700;
   }
 
   .star-rating .star-empty {
