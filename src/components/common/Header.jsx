@@ -8,12 +8,9 @@ const LINE_OFFICIAL_URL = 'https://line.me/R/ti/p/@beautypowder';
 
 const NAVIGATION_ITEMS = [
   { id: 'home', label: 'ホーム', icon: 'home', path: '/' },
+  { id: 'salon', label: 'サロン', icon: 'spa', path: '/salon' },
   { id: 'ranking', label: 'ランキング', icon: 'trophy', path: '/ranking' },
-  { id: 'beauty-powder', label: 'ビューティーパウダー', path: '/category/beauty-powder' },
-  { id: 'wakonal', label: 'ワコナルビューティ', path: '/category/wakonal' },
-  { id: 'hikari', label: 'ヒカリシリーズ', path: '/category/hikari' },
-  { id: 'cleansing', label: 'クレンジング', path: '/category/cleansing' },
-  { id: 'lotion', label: '化粧水', path: '/category/lotion' },
+  { id: 'purchase', label: '購入', icon: 'shopping-bag', path: '/purchase' },
 ];
 
 export function Header() {
@@ -49,11 +46,11 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto">
         {/* Main Header */}
         <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <button
               onClick={toggleMobileMenu}
               className="sm:hidden text-gray-600 hover:text-rose-700"
@@ -63,68 +60,168 @@ export function Header() {
             </button>
             <Link
               to="/"
-              className="text-xl sm:text-2xl font-light cursor-pointer"
-              style={{ color: '#d4838f', fontFamily: 'Georgia, serif' }}
+              className="flex items-center space-x-2 cursor-pointer"
             >
-              <FontAwesomeIcon icon="spa" className="mr-2" style={{ color: '#ffb5ba' }} />
-              <span className="hidden sm:inline">ADAGIO LAB - </span>
-              <span className="text-lg sm:text-xl">CareMé</span>
+              {/* CM Logo Square */}
+              <div
+                className="w-10 h-10 flex items-center justify-center rounded"
+                style={{ backgroundColor: '#ffb5ba' }}
+              >
+                <span className="text-white font-bold text-lg">CM</span>
+              </div>
+              {/* CareMé Text */}
+              <span
+                className="text-xl sm:text-2xl font-semibold"
+                style={{ color: '#d4838f', fontFamily: 'Georgia, serif' }}
+              >
+                CareMé
+              </span>
             </Link>
           </div>
 
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            {/* Search Icon - Mobile Only */}
-            <button className="sm:hidden text-gray-600 hover:text-rose-700" aria-label="Search">
-              <FontAwesomeIcon icon="search" />
-            </button>
-
-            {/* Login/Profile Button */}
-            <button
-              onClick={handleAuthClick}
-              className="flex items-center space-x-2 px-3 py-1.5 rounded-full hover:bg-rose-50 transition-colors"
-            >
-              <FontAwesomeIcon icon="user-circle" className="text-gray-600" />
-              <span className="hidden sm:block text-sm text-gray-700">
-                {currentUser ? (userProfile?.name || 'プロフィール') : 'ログイン'}
-              </span>
-            </button>
-
-            {/* LINE Purchase Button */}
-            <a
-              href={LINE_OFFICIAL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-white text-sm sm:text-base font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 btn-line"
-            >
-              <FontAwesomeIcon icon={['fab', 'line']} className="text-lg sm:text-xl" />
-              <span className="hidden sm:inline">LINEで購入</span>
-            </a>
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* User Info / Login Button */}
+            {!currentUser ? (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-full border text-sm font-medium transition-colors"
+                  style={{
+                    borderColor: '#ffb5ba',
+                    color: '#666',
+                    backgroundColor: 'white',
+                  }}
+                >
+                  ログイン
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 rounded-full text-white text-sm font-medium transition-colors"
+                  style={{ backgroundColor: '#ffb5ba' }}
+                >
+                  新規登録
+                </Link>
+              </>
+            ) : (
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                {/* User Name Display */}
+                <div className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-full">
+                  {userProfile?.avatarUrl || currentUser.photoURL ? (
+                    <img
+                      src={userProfile?.avatarUrl || currentUser.photoURL}
+                      alt={userProfile?.name || currentUser.displayName || 'User'}
+                      className="w-6 h-6 rounded-full"
+                    />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+                      <FontAwesomeIcon
+                        icon="user"
+                        className="text-gray-500 text-xs"
+                      />
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-gray-700">
+                    {userProfile?.name || currentUser.displayName || 'ユーザー'}
+                  </span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-full border text-sm font-medium transition-colors"
+                  style={{
+                    borderColor: '#ffb5ba',
+                    color: '#666',
+                    backgroundColor: 'white',
+                  }}
+                >
+                  ログアウト
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Navigation Tabs - Horizontal Scroll on Mobile */}
-        <nav className="border-t border-rose-100">
-          <div className="overflow-x-auto scrollbar-hide">
-            <div className="flex whitespace-nowrap px-4 sm:px-6">
-              {NAVIGATION_ITEMS.map((item) => {
-                const isActive = isActiveRoute(item.path);
-                return (
-                  <Link
-                    key={item.id}
-                    to={item.path}
-                    className={`nav-tab px-4 py-2.5 text-sm sm:text-base font-medium border-b-2 transition-all duration-300 ${
-                      isActive
-                        ? 'border-rose-400 text-rose-700'
-                        : 'text-gray-600 hover:text-rose-700 border-transparent hover:border-rose-300'
+        {/* Navigation Bar - Vertical Icons with Text Below */}
+        <nav className="hidden sm:block border-t border-gray-200">
+          <div className="flex">
+            {NAVIGATION_ITEMS.map((item) => {
+              const isActive = isActiveRoute(item.path);
+              const isPurchase = item.id === 'purchase';
+
+              return (
+                <Link
+                  key={item.id}
+                  to={item.path}
+                  className={`flex-1 flex flex-col items-center justify-center py-3 transition-all duration-300 relative ${
+                    isActive && !isPurchase
+                      ? 'bg-rose-100'
+                      : isPurchase
+                      ? ''
+                      : 'bg-white hover:bg-gray-50'
+                  }`}
+                  style={
+                    isPurchase
+                      ? { backgroundColor: '#22c55e' }
+                      : isActive
+                      ? { backgroundColor: '#ffe4e1' }
+                      : {}
+                  }
+                >
+                  {/* Icon */}
+                  <div className="mb-1">
+                    {isPurchase ? (
+                      <div className="relative">
+                        {/* LINE-like bubble: white speech bubble in light green rounded square */}
+                        <div
+                          className="w-9 h-9 rounded-lg flex items-center justify-center relative"
+                          style={{ backgroundColor: 'rgba(255, 255, 255, 0.25)' }}
+                        >
+                          {/* Speech bubble shape */}
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center"
+                            style={{ backgroundColor: 'white' }}
+                          >
+                            <FontAwesomeIcon
+                              icon={item.icon}
+                              className="text-green-600 text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={item.icon}
+                        className={`text-xl ${
+                          isActive
+                            ? 'text-red-600'
+                            : 'text-gray-600'
+                        }`}
+                      />
+                    )}
+                  </div>
+
+                  {/* Text */}
+                  <span
+                    className={`text-xs font-medium ${
+                      isPurchase
+                        ? 'text-white'
+                        : isActive
+                        ? 'text-red-600'
+                        : 'text-gray-600'
                     }`}
-                    style={isActive ? { color: '#d4838f' } : {}}
                   >
-                    {item.icon && <FontAwesomeIcon icon={item.icon} className="mr-1.5" />}
                     {item.label}
-                  </Link>
-                );
-              })}
-            </div>
+                  </span>
+
+                  {/* Active Underline */}
+                  {isActive && !isPurchase && (
+                    <div
+                      className="absolute bottom-0 left-0 right-0 h-0.5"
+                      style={{ backgroundColor: '#dc2626' }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </div>
         </nav>
 
@@ -144,18 +241,16 @@ export function Header() {
                 </h2>
               </div>
               <nav className="p-4">
-                {NAVIGATION_ITEMS.map((item, index) => (
-                  <div key={item.id}>
-                    {index === 2 && <div className="border-t border-rose-100 my-3" />}
-                    <Link
-                      to={item.path}
-                      onClick={toggleMobileMenu}
-                      className="block py-3 text-gray-700 hover:text-rose-700 transition-colors"
-                    >
-                      {item.icon && <FontAwesomeIcon icon={item.icon} className="mr-3" />}
-                      {item.label}
-                    </Link>
-                  </div>
+                {NAVIGATION_ITEMS.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={item.path}
+                    onClick={toggleMobileMenu}
+                    className="block py-3 text-gray-700 hover:text-rose-700 transition-colors"
+                  >
+                    {item.icon && <FontAwesomeIcon icon={item.icon} className="mr-3" />}
+                    {item.label}
+                  </Link>
                 ))}
               </nav>
             </div>

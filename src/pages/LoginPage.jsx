@@ -2,13 +2,36 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import { useToast } from '../hooks/useToast';
+import { ToastContainer } from '../components/common/Toast';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { success, error: showError } = useToast();
+  const { toasts, success, error: showError, removeToast } = useToast();
+
+  const getErrorMessage = (error) => {
+    const errorCode = error.code;
+    switch (errorCode) {
+      case 'auth/invalid-email':
+        return 'メールアドレスの形式が正しくありません';
+      case 'auth/user-disabled':
+        return 'このアカウントは無効化されています';
+      case 'auth/user-not-found':
+        return 'このメールアドレスは登録されていません';
+      case 'auth/wrong-password':
+        return 'パスワードが正しくありません';
+      case 'auth/invalid-credential':
+        return 'メールアドレスまたはパスワードが正しくありません';
+      case 'auth/too-many-requests':
+        return 'ログイン試行回数が多すぎます。しばらくしてから再度お試しください';
+      case 'auth/network-request-failed':
+        return 'ネットワークエラーが発生しました。接続を確認してください';
+      default:
+        return error.message || 'ログインに失敗しました';
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +42,8 @@ export function LoginPage() {
       success('ログインしました！');
       navigate('/');
     } catch (err) {
-      showError(err.message || 'ログインに失敗しました');
+      const errorMessage = getErrorMessage(err);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -31,6 +55,7 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen pt-24 sm:pt-28 bg-mistyrose-gradient flex items-center justify-center">
+      <ToastContainer toasts={toasts} onClose={removeToast} />
       <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-xl">
         <h2 className="text-2xl font-light mb-6 text-gray-700">ログイン</h2>
         <form onSubmit={handleSubmit}>

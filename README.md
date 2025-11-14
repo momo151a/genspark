@@ -1,166 +1,181 @@
 # CareMé Beauty Reviews - React + Firebase
 
-A modern beauty powder reviews platform built with React 19, Vite, and Firebase.
+React 19、Vite、Firebaseで構築されたモダンな美容パウダーレビュープラットフォームです。ユーザーは製品レビューや画像を投稿し、ブランドごとの評価を閲覧できます。
 
-## 🚀 Migration Status
+## 🚀 プロジェクト概要
 
-This project is being migrated from Cloudflare Pages + Hono + D1 to React + Vite + Firebase.
+- フロントエンド: React + Vite によるシングルページアプリケーション
+- バックエンド: Firebase（Authentication、Firestore、Storage、Hosting）
+- CI/CD: GitHub Actions での自動ビルド・デプロイ
+- デザイン: CSS変数とカスタムCSSによるレスポンシブ対応
 
-**Current Phase**: Week 1 - Infrastructure Setup ✅
+## ✅ 進捗状況
 
-### Completed Tasks
-- ✅ Firebase project configuration (firestore.rules, storage.rules, indexes)
-- ✅ Environment variables setup
-- ✅ Firebase SDK initialization
-- ✅ React Router setup with basic routes
-- ✅ Core services (auth, reviews, products, storage)
-- ✅ Authentication context and hooks
-- ✅ Common components (Header, Footer, Modal, Toast, Loading)
-- ✅ Global styles and CSS variables
-- ✅ Project folder structure
+### 完了したタスク
 
-### Next Steps
-1. Configure Firebase project in Firebase Console
-2. Add Firebase credentials to `.env` file
-3. Deploy Firestore rules and indexes
-4. Create data migration script (from D1 to Firestore)
-5. Build review components
-6. Implement remaining features
+- ✅ Firebaseプロジェクトの設定（firestore.rules、storage.rules、indexes）
+- ✅ 環境変数のセットアップ
+- ✅ Firebase SDKの初期化
+- ✅ React Routerによる基本ルート構成
+- ✅ コアサービス（認証、レビュー、製品、ストレージ）
+- ✅ 認証コンテキストとカスタムフック
+- ✅ 共通コンポーネント（Header、Footer、Modal、Toast、Loading）
+- ✅ グローバルスタイルとCSS変数
+- ✅ プロジェクトフォルダ構造の整備
 
-## 📋 Prerequisites
+### 今後の予定
 
-- Node.js 18+ and npm
+1. Firebase Consoleでの各種機能設定
+2. `.env`ファイルにFirebase認証情報を追加
+3. Firestoreルールとインデックスのデプロイ
+4. レビュー関連UIコンポーネントの拡張
+5. 管理者向け機能や分析ビューの実装
+6. パフォーマンス計測とアクセシビリティ改善
+
+## 📋 前提条件
+
+- Node.js 18以上とnpm
 - Firebase CLI: `npm install -g firebase-tools`
-- Firebase account and project
+- Firebaseアカウントとプロジェクト
 
-## 🔧 Installation
+## 🔧 インストール
 
-1. **Clone and install dependencies:**
+1. **リポジトリのクローンと依存関係のインストール:**
+
 ```bash
 cd genspark
 npm install
 ```
 
-2. **Configure Firebase:**
+2. **Firebaseの設定:**
 
-Get your Firebase configuration from Firebase Console → Project Settings → General
+Firebase Console → プロジェクトの設定 → 全般 からFirebase設定を取得してください。
 
-Update `.env` with your Firebase credentials:
+`.env`ファイルにFirebase認証情報を更新:
+
 ```bash
 VITE_FIREBASE_API_KEY=your_api_key_here
-VITE_FIREBASE_AUTH_DOMAIN=genspark-c7767.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=genspark-c7767
-VITE_FIREBASE_STORAGE_BUCKET=genspark-c7767.appspot.com
+VITE_FIREBASE_AUTH_DOMAIN=kutikomi-f1e8b.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=kutikomi-f1e8b
+VITE_FIREBASE_STORAGE_BUCKET=kutikomi-f1e8b.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
 ```
 
-3. **Enable Firebase services:**
+3. **Firebaseサービスの有効化:**
 
-In Firebase Console, enable:
-- Authentication (Email/Password)
+Firebase Consoleで以下を有効化してください:
+
+- Authentication（メール/パスワード）
 - Firestore Database
 - Cloud Storage
 
-4. **Deploy Firebase rules and indexes:**
+4. **Firebaseルールとインデックスのデプロイ:**
+
 ```bash
 firebase login
-firebase use genspark-c7767
+firebase use kutikomi-f1e8b
 firebase deploy --only firestore:rules,storage:rules,firestore:indexes
 ```
 
-## 🏃 Running the Project
+## 🏃 プロジェクトの実行
 
-### Development Mode
+### 開発モード
+
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173)
+[http://localhost:5173](http://localhost:5173) を開いてください。
 
-### Production Build
+### 本番ビルド
+
 ```bash
 npm run build
 ```
 
-### Preview Production Build
+### 本番ビルドのプレビュー
+
 ```bash
 npm run preview
 ```
 
-### Deploy to Firebase Hosting
+### Firebase Hostingへのデプロイ
+
 ```bash
 npm run build
 firebase deploy --only hosting
 ```
 
-## 📁 Project Structure
+## 📁 プロジェクト構造
 
 ```
 genspark/
 ├── src/
-│   ├── components/           # React components
-│   │   ├── common/          # Reusable components
-│   │   ├── auth/            # Authentication components
-│   │   ├── reviews/         # Review components
-│   │   └── products/        # Product components
+│   ├── components/           # Reactコンポーネント
+│   │   ├── common/          # 共通コンポーネント
+│   │   ├── auth/            # 認証関連コンポーネント
+│   │   ├── reviews/         # レビュー関連コンポーネント
+│   │   └── products/        # 製品関連コンポーネント
 │   │
-│   ├── pages/               # Page components
+│   ├── pages/               # ページコンポーネント
 │   │   ├── HomePage.jsx
 │   │   ├── LoginPage.jsx
 │   │   ├── RegisterPage.jsx
 │   │   ├── ProductsPage.jsx
 │   │   └── NotFoundPage.jsx
 │   │
-│   ├── contexts/            # React contexts
-│   │   └── AuthContext.jsx  # Global auth state
+│   ├── contexts/            # Reactコンテキスト
+│   │   └── AuthContext.jsx  # グローバル認証状態
 │   │
-│   ├── hooks/               # Custom React hooks
+│   ├── hooks/               # カスタムReactフック
 │   │   ├── useToast.js
 │   │   └── useFirestore.js
 │   │
-│   ├── services/            # Firebase service wrappers
+│   ├── services/            # Firebaseサービスラッパー
 │   │   ├── auth.service.js
 │   │   ├── reviews.service.js
 │   │   ├── products.service.js
 │   │   └── storage.service.js
 │   │
-│   ├── utils/               # Helper functions
-│   ├── firebase.js          # Firebase initialization
-│   ├── App.jsx              # Root component
-│   └── main.jsx             # Entry point
+│   ├── utils/               # ヘルパー関数
+│   ├── firebase.js          # Firebase初期化
+│   ├── App.jsx              # ルートコンポーネント
+│   └── main.jsx             # エントリーポイント
 │
-├── public/                  # Static assets
-├── firestore.rules          # Firestore security rules
-├── storage.rules            # Storage security rules
-├── firestore.indexes.json   # Firestore indexes
-├── firebase.json            # Firebase configuration
+├── public/                  # 静的アセット
+├── firestore.rules          # Firestoreセキュリティルール
+├── storage.rules            # Storageセキュリティルール
+├── firestore.indexes.json   # Firestoreインデックス
+├── firebase.json            # Firebase設定
 └── package.json
 ```
 
-## 🔐 Firebase Security
+## 🔐 Firebaseセキュリティ
 
-### Firestore Rules
-- Users can read all public profiles
-- Users can only edit their own profile
-- Reviews are public (read) but only creators can edit/delete
-- Products and categories are read-only (admin managed)
+### Firestoreルール
 
-### Storage Rules
-- All images are publicly readable
-- Users can only upload/delete their own avatars
-- Authenticated users can upload review images
-- Product images are admin-only
+- ユーザーは公開プロフィールを読み取り可能
+- ユーザーは自分のプロフィールのみ編集可能
+- レビューは公開（閲覧可能）だが、作成者だけが編集・削除可能
+- 製品とカテゴリは読み取り専用（管理者管理）
 
-## 🛠️ Tech Stack
+### Storageルール
 
-- **Frontend**: React 19, Vite 7
-- **Backend**: Firebase (Firestore, Auth, Storage, Hosting)
-- **Routing**: React Router v7
-- **State Management**: Zustand
-- **Styling**: CSS Variables + Custom CSS
+- 画像は公開読み取り可能
+- ユーザーは自分のアバターのみアップロード・削除可能
+- 認証済みユーザーはレビュー画像をアップロード可能
+- 製品画像は管理者のみ
 
-## 📦 Key Dependencies
+## 🛠️ 技術スタック
+
+- **フロントエンド**: React 19、Vite 7
+- **バックエンド**: Firebase（Firestore、Auth、Storage、Hosting）
+- **ルーティング**: React Router v7
+- **状態管理**: Zustand
+- **スタイリング**: CSS変数 + カスタムCSS
+
+## 📦 主要な依存関係
 
 ```json
 {
@@ -172,19 +187,16 @@ genspark/
 }
 ```
 
-## 🔄 Data Migration
+## 🔄 データ構成
 
-The migration from D1 (SQLite) to Firestore is documented in `firebase_migration_plan.md`.
+- Firestore: ユーザー、レビュー、製品、カテゴリーなどのコレクションを格納
+- Cloud Storage: レビュー画像やプロフィール画像を保存
+- Authentication: メール/パスワードによるユーザー管理
+- Firebase Hosting: 静的ファイルとSPAルーティングを提供
 
-Key changes:
-- SQL → NoSQL (Firestore)
-- Base64 images → Firebase Storage URLs
-- Custom auth → Firebase Authentication
-- Sessions table → Firebase Auth tokens
+## 🎨 スタイリング
 
-## 🎨 Styling
-
-The project uses CSS Variables for theming:
+このプロジェクトはテーマ設定にCSS変数を使用しています:
 
 ```css
 --primary-color: #e91e63
@@ -192,68 +204,93 @@ The project uses CSS Variables for theming:
 --accent-color: #ffc107
 ```
 
-All styles are defined in `src/index.css` with responsive design support.
+スタイルは`src/index.css`に定義され、レスポンシブデザインをサポートしています。
 
-## 🔗 Routes
+## 🔗 ルート
 
-- `/` - Home page
-- `/login` - Login page
-- `/register` - Registration page
-- `/products` - Products listing
-- `/profile` - User profile (protected)
+- `/` - ホームページ
+- `/login` - ログインページ
+- `/register` - 登録ページ
+- `/products` - 製品一覧
+- `/profile` - ユーザープロフィール（認証必須）
 - `*` - 404 Not Found
 
-## 🧪 Development with Firebase Emulators (Optional)
+## 🧪 Firebaseエミュレーターでの開発（オプション）
 
-1. Install emulators:
+1. エミュレーターのインストール:
+
 ```bash
 firebase init emulators
 ```
 
-2. Start emulators:
+2. エミュレーターの起動:
+
 ```bash
 firebase emulators:start
 ```
 
-3. Update `.env`:
+3. `.env`の更新:
+
 ```bash
 VITE_USE_EMULATORS=true
 ```
 
-This will connect to local Firebase emulators instead of production.
+これにより、Firebaseの各サービスをローカルで検証できます。
 
-## 📝 Environment Variables
+## 📝 環境変数
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `VITE_FIREBASE_API_KEY` | Firebase API key | `AIza...` |
-| `VITE_FIREBASE_AUTH_DOMAIN` | Auth domain | `genspark-c7767.firebaseapp.com` |
-| `VITE_FIREBASE_PROJECT_ID` | Project ID | `genspark-c7767` |
-| `VITE_FIREBASE_STORAGE_BUCKET` | Storage bucket | `genspark-c7767.appspot.com` |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Messaging sender ID | `123456789` |
-| `VITE_FIREBASE_APP_ID` | App ID | `1:123:web:abc` |
-| `VITE_USE_EMULATORS` | Use local emulators | `true` or omit |
+| 変数名                              | 説明              | 例                                  |
+| ----------------------------------- | ----------------- | ----------------------------------- |
+| `VITE_FIREBASE_API_KEY`             | Firebase APIキー  | `AIza...`                           |
+| `VITE_FIREBASE_AUTH_DOMAIN`         | 認証ドメイン       | `kutikomi-f1e8b.firebaseapp.com`    |
+| `VITE_FIREBASE_PROJECT_ID`          | プロジェクトID    | `kutikomi-f1e8b`                    |
+| `VITE_FIREBASE_STORAGE_BUCKET`      | ストレージバケット | `kutikomi-f1e8b.appspot.com`        |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | メッセージング送信者ID | `123456789`                      |
+| `VITE_FIREBASE_APP_ID`              | アプリID          | `1:123:web:abc`                     |
+| `VITE_USE_EMULATORS`                | ローカルエミュレーターを使用 | `true`または省略              |
 
-## 🚀 Deployment
+## 🚀 デプロイ
 
-The site is hosted on Firebase Hosting.
+サイトはFirebase Hostingでホストされています。
 
-**Production URL**: `https://genspark-c7767.web.app`
+**本番URL**: `https://kutikomi-f1e8b.web.app`
 
-Deploy command:
+デプロイコマンド:
+
 ```bash
 npm run build && firebase deploy
 ```
 
-## 📄 License
+### GitHub Actionsによる自動デプロイ
 
-This project is private and proprietary.
+`master`ブランチへのプッシュで自動的にFirebase Hostingへデプロイされます。
 
-## 👥 Contributing
+**必要な設定:**
 
-This is a migration project. See `firebase_migration_plan.md` for the full migration roadmap.
+1. Firebase CLIトークンを取得:
+   ```bash
+   firebase login:ci
+   ```
+
+2. GitHubリポジトリのシークレットに追加:
+   - Settings → Secrets and variables → Actions
+   - 新しいリポジトリシークレットを作成
+   - 名前: `FIREBASE_TOKEN`
+   - 値: 上記コマンドで取得したトークン
+
+ワークフローファイル:
+- `.github/workflows/firebase-hosting-merge.yml` - masterブランチへのマージ時にデプロイ
+- `.github/workflows/firebase-hosting-pull-request.yml` - プルリクエスト時にプレビューをデプロイ
+
+## 📄 ライセンス
+
+このプロジェクトはプライベートでプロプライエタリです。
+
+## 👥 コントリビューション
+
+プルリクエストを歓迎します。大きな変更を行う際はIssueを立ててから作業してください。
 
 ---
 
-**Last Updated**: 2025-10-29
-**Status**: In Development (Week 1 Complete)
+**最終更新**: 2025-10-29
+**ステータス**: 開発中
