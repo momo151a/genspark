@@ -249,25 +249,27 @@ export function Carousel({ products = SAMPLE_PRODUCTS, title = "人気商品" })
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-10">
-          <h2
-            className="text-3xl sm:text-4xl font-light mb-4"
-            style={{ color: "#d4838f", fontFamily: "Georgia, serif" }}
-          >
-            <FontAwesomeIcon
-              icon="star"
-              className="mr-3"
-              style={{ color: "#ffb5ba" }}
-            />
-            {title}
-          </h2>
-          <div
-            className="w-24 h-1 mx-auto"
-            style={{
-              background: "linear-gradient(to right, #ffe4e1, #ffb5ba)",
-            }}
-          ></div>
-        </div>
+        {title && (
+          <div className="text-center mb-10">
+            <h2
+              className="text-3xl sm:text-4xl font-light mb-4"
+              style={{ color: "#d4838f", fontFamily: "Georgia, serif" }}
+            >
+              <FontAwesomeIcon
+                icon="star"
+                className="mr-3"
+                style={{ color: "#ffb5ba" }}
+              />
+              {title}
+            </h2>
+            <div
+              className="w-24 h-1 mx-auto"
+              style={{
+                background: "linear-gradient(to right, #ffe4e1, #ffb5ba)",
+              }}
+            ></div>
+          </div>
+        )}
 
         {/* Mobile Carousel - Snap Scroll */}
         <div className="sm:hidden">
@@ -294,10 +296,10 @@ export function Carousel({ products = SAMPLE_PRODUCTS, title = "人気商品" })
                       <h3 className="font-medium text-gray-800 mb-1 line-clamp-1">
                         {product.name}
                       </h3>
-                      <p className="text-xs text-gray-500 mb-2">
+                      <p className="text-xs text-gray-500 mb-2 line-clamp-1">
                         {product.category_name || "ビューティーパウダー"}
                       </p>
-                      <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                      <p className="text-sm text-gray-600 line-clamp-1 mb-3">
                         {product.description ||
                           "美容と健康をサポートする高品質パウダー"}
                       </p>
@@ -368,10 +370,10 @@ export function Carousel({ products = SAMPLE_PRODUCTS, title = "人気商品" })
                       <h3 className="font-medium text-gray-800 mb-1 line-clamp-1">
                         {product.name}
                       </h3>
-                      <p className="text-xs text-gray-500 mb-2">
+                      <p className="text-xs text-gray-500 mb-2 line-clamp-1">
                         {product.category_name || "ビューティーパウダー"}
                       </p>
-                      <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                      <p className="text-sm text-gray-600 line-clamp-1 mb-3">
                         {product.description ||
                           "美容と健康をサポートする高品質パウダー"}
                       </p>

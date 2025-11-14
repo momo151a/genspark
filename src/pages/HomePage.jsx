@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Carousel } from "../components/common/Carousel";
 import { useAuth } from "../contexts/AuthContext";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const LINE_OFFICIAL_URL = "https://line.me/R/ti/p/@beautypowder";
 
 const CATEGORIES = [
-  { value: "", label: "すべてのカテゴリー" },
+  { value: "", label: "すべて" },
   { value: "1", label: "ビューティーパウダー" },
   { value: "2", label: "ワコナルビューティ" },
   { value: "3", label: "ヒカリシリーズ" },
@@ -25,29 +26,62 @@ const PURCHASE_STEPS = [
   {
     step: 1,
     title: "LINE友だち追加",
-    description: "公式LINEアカウントを友だちに追加",
+    description: "公式LINEを友だち追加",
   },
   {
     step: 2,
-    title: "商品選択",
-    description: "メニューから希望の商品を選択",
+    title: "URL購入",
+    description: "LINE内のURLから購入",
   },
   {
     step: 3,
-    title: "クーポン適用",
-    description: "友だち限定15%OFFクーポン自動適用",
+    title: "発送",
+    description: "商品を迅速に発送",
   },
   {
     step: 4,
-    title: "購入完了",
-    description: "決済完了後、2-3営業日でお届け",
+    title: "お届け",
+    description: "ご自宅にお届け",
   },
 ];
+
+// ランキングデータ
+const RANKING_DATA = {
+  sales: [
+    { rank: 1, name: "ビューティーパウダー", price: 3980, sales: "1234" },
+    { rank: 2, name: "ワコナルビューティー", price: 4980, sales: "987" },
+    { rank: 3, name: "リミエローション", price: 2980, sales: "759" },
+  ],
+  repeat: [
+    { rank: 1, name: "ビューティーパウダー", price: 3980, rate: "85%" },
+    { rank: 2, name: "ヒカリノシオ", price: 1980, rate: "83%" },
+    { rank: 3, name: "梓のあな甘茶", price: 2480, rate: "81%" },
+  ],
+  skincare: [
+    { rank: 1, name: "リミエローション", price: 2980, rating: 5.0 },
+    { rank: 2, name: "プラセンタクリーム", price: 5980, rating: 4.7 },
+    { rank: 3, name: "リミエクレンジング", price: 3480, rating: 4.8 },
+  ],
+};
 
 export function HomePage() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [sortBy, setSortBy] = useState("latest");
   const { currentUser } = useAuth();
+
+  // スクロールアニメーション用のrefと状態
+  const [heroRef, heroVisible] = useScrollAnimation({ threshold: 0.2 });
+  const [productsRef, productsVisible] = useScrollAnimation({ threshold: 0.2 });
+  const [reviewsRef, reviewsVisible] = useScrollAnimation({ threshold: 0.2 });
+  const [rankingRef, rankingVisible] = useScrollAnimation({ threshold: 0.2 });
+  const [purchaseRef, purchaseVisible] = useScrollAnimation({ threshold: 0.2 });
+
+  // 統計データ（実際のデータに置き換える必要があります）
+  const stats = {
+    reviewCount: 6,
+    userCount: "150+",
+    averageRating: 4.5,
+  };
 
   const handleReviewButtonClick = () => {
     if (currentUser) {
@@ -78,49 +112,130 @@ export function HomePage() {
   return (
     <main className="min-h-screen pt-24 sm:pt-28 bg-mistyrose-gradient">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-12 sm:py-20">
+      <section
+        ref={heroRef}
+        className={`relative overflow-hidden py-12 sm:py-20 border-b border-rose-100 scroll-fade-in-up ${
+          heroVisible ? "visible" : ""
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1
-              className="text-3xl sm:text-5xl font-light mb-6"
-              style={{ color: "#d4838f", fontFamily: "Georgia, serif" }}
-            >
-              あなたの美しさを引き出す
-              <br className="sm:hidden" />
-              <span className="text-2xl sm:text-4xl">ビューティーパウダー</span>
-            </h1>
-            <p className="text-gray-600 text-base sm:text-lg mb-8 leading-relaxed">
-              CareMéの厳選された美容成分で、内側から輝く美しさを。
-              <br />
-              お客様の声を集めた、信頼できる口コミサイト
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={handleReviewButtonClick}
-                className="px-8 py-3 rounded-full text-white font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 btn-primary"
+            <div className="mb-4">
+              <p
+                className="text-sm uppercase tracking-widest mb-2"
+                style={{ color: "#ffb5ba", fontFamily: "Georgia, serif" }}
               >
-                <FontAwesomeIcon icon="pen" className="mr-2" />
-                レビューを書く
-              </button>
+                CAREMÉ PRESENTS
+              </p>
+              <h1
+                className="text-3xl sm:text-5xl font-light mb-4"
+                style={{ color: "#d4838f", fontFamily: "Georgia, serif" }}
+              >
+                美しさは内側から、プロテインで輝く毎日を
+              </h1>
+            </div>
+            <p className="text-gray-500 mb-8 text-sm sm:text-base">
+              CareMéの製品口コミを参考に、あなたにぴったりの美容習慣を見つけましょう
+            </p>
+
+            <div className="mb-8">
               <a
                 href={LINE_OFFICIAL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-3 rounded-full text-white font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 btn-line"
+                className="inline-flex items-center space-x-3 bg-gradient-to-r from-green-400 to-green-500 text-white px-8 py-4 rounded-full hover:from-green-500 hover:to-green-600 transition font-medium text-lg shadow-lg transform hover:scale-105"
               >
-                <FontAwesomeIcon icon={["fab", "line"]} className="mr-2" />
-                LINE友だち限定15%OFF
+                <FontAwesomeIcon icon={["fab", "line"]} className="text-2xl" />
+                <span>公式LINEで購入する</span>
               </a>
+              <p className="text-xs text-gray-500 mt-3">
+                友だち追加で限定クーポンGET!
+              </p>
+            </div>
+
+            {/* Statistics Boxes */}
+            <div className="flex justify-center gap-6">
+              <div className="bg-white rounded-2xl px-6 py-4 shadow-sm border border-rose-200">
+                <FontAwesomeIcon
+                  icon="comments"
+                  className="text-xl mb-2"
+                  style={{ color: "#d4838f" }}
+                />
+                <p className="text-xs text-gray-500">口コミ数</p>
+                <p className="text-xl font-light text-gray-700">
+                  {stats.reviewCount}
+                </p>
+              </div>
+              <div className="bg-white rounded-2xl px-6 py-4 shadow-sm border border-rose-200">
+                <FontAwesomeIcon
+                  icon="users"
+                  className="text-xl mb-2 text-neutral-300"
+                />
+                <p className="text-xs text-gray-500">ユーザー数</p>
+                <p className="text-xl font-light text-gray-700">
+                  {stats.userCount}
+                </p>
+              </div>
+              <div className="bg-white rounded-2xl px-6 py-4 shadow-sm border border-rose-200">
+                <FontAwesomeIcon
+                  icon="star"
+                  className="text-xl mb-2 text-orange-300"
+                />
+                <p className="text-xs text-gray-500">平均評価</p>
+                <p className="text-xl font-light text-gray-700">
+                  {stats.averageRating}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Products Carousel */}
-      <Carousel title="人気商品" />
+      {/* CareMé Products Section */}
+      <section
+        ref={productsRef}
+        className={`py-12 bg-white border-b border-rose-100 scroll-fade-in-up ${
+          productsVisible ? "visible" : ""
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2
+              className="text-2xl sm:text-3xl font-semibold mb-3"
+              style={{ color: "#d4838f", fontFamily: "Georgia, serif" }}
+            >
+              CareMé Products
+            </h2>
+            <p className="text-gray-600">美と健康をサポートする製品ラインナップ</p>
+            <div
+              className="w-24 h-1 mx-auto mt-4"
+              style={{
+                background: "linear-gradient(to right, #ffe4e1, #ffb5ba)",
+              }}
+            ></div>
+          </div>
+          <Carousel title="" />
+          <div className="mt-8 text-center">
+            <a
+              href={LINE_OFFICIAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-3 px-8 py-4 rounded-full text-white font-medium shadow-lg transform hover:scale-105 transition-all duration-300 btn-line"
+            >
+              <FontAwesomeIcon icon={["fab", "line"]} className="text-2xl" />
+              <span>全商品のお問い合わせはLINEから</span>
+            </a>
+          </div>
+        </div>
+      </section>
 
-      {/* Reviews Section */}
-      <section className="py-12">
+      {/* Customer Reviews Section */}
+      <section
+        ref={reviewsRef}
+        className={`py-12 bg-gradient-to-b from-white to-rose-50 border-b border-rose-100 scroll-fade-in-up ${
+          reviewsVisible ? "visible" : ""
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <h2
@@ -132,8 +247,9 @@ export function HomePage() {
                 className="mr-3"
                 style={{ color: "#ffb5ba" }}
               />
-              お客様の声
+              Customer Reviews
             </h2>
+            <p className="text-gray-600 mb-4">お客様からいただいた口コミ</p>
             <div
               className="w-24 h-1 mx-auto"
               style={{
@@ -144,37 +260,35 @@ export function HomePage() {
 
           {/* Filter and Sort */}
           <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
-            <div className="flex items-center space-x-4 w-full sm:w-auto">
-              <select
-                value={categoryFilter}
-                onChange={handleCategoryChange}
-                className="px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300 text-gray-700"
-              >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </option>
-                ))}
-              </select>
+            <div className="flex items-center space-x-2 flex-wrap gap-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => setCategoryFilter(cat.value)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    categoryFilter === cat.value
+                      ? "bg-rose-400 text-white"
+                      : "bg-white text-gray-600 hover:bg-rose-50 border border-rose-200"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
             </div>
 
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-600">並び替え:</span>
-              <div className="flex rounded-lg overflow-hidden border border-rose-200">
+              <select
+                value={sortBy}
+                onChange={(e) => handleSortChange(e.target.value)}
+                className="px-4 py-2 border border-rose-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-300 text-gray-700"
+              >
                 {SORT_OPTIONS.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => handleSortChange(option.value)}
-                    className={`px-4 py-2 text-sm font-medium transition-colors ${
-                      sortBy === option.value
-                        ? "bg-rose-100 text-rose-700"
-                        : "bg-white text-gray-600 hover:bg-rose-50"
-                    }`}
-                  >
+                  <option key={option.value} value={option.value}>
                     {option.label}
-                  </button>
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
           </div>
 
@@ -198,21 +312,207 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Purchase Flow Section */}
-      <section className="py-12 bg-gradient-to-br from-rose-50 to-white">
+      {/* Popular Ranking Section */}
+      <section
+        ref={rankingRef}
+        className={`py-12 bg-white border-t border-rose-100 scroll-fade-in-up ${
+          rankingVisible ? "visible" : ""
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
             <h2
               className="text-3xl sm:text-4xl font-light mb-4"
               style={{ color: "#d4838f", fontFamily: "Georgia, serif" }}
             >
-              <FontAwesomeIcon
-                icon="shopping-cart"
-                className="mr-3"
-                style={{ color: "#ffb5ba" }}
-              />
-              ご購入までの流れ
+              人気ランキング
             </h2>
+            <p className="text-gray-600 mb-4">今最も選ばれている商品をチェック</p>
+            <div
+              className="w-24 h-1 mx-auto"
+              style={{
+                background: "linear-gradient(to right, #ffe4e1, #ffb5ba)",
+              }}
+            ></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* 売れ筋TOP3 */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-rose-100">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mr-3">
+                  <FontAwesomeIcon
+                    icon="fire"
+                    className="text-orange-500 text-xl"
+                  />
+                </div>
+                <h3
+                  className="text-xl font-semibold"
+                  style={{ color: "#d4838f" }}
+                >
+                  売れ筋TOP3
+                </h3>
+              </div>
+              <div className="space-y-3">
+                {RANKING_DATA.sales.map((item) => (
+                  <div
+                    key={item.rank}
+                    className="flex items-center justify-between p-3 bg-rose-50 rounded-lg"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-rose-700 font-bold mr-2">
+                        {item.rank}
+                      </span>
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">
+                          {item.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          売上: {item.sales}
+                        </p>
+                      </div>
+                    </div>
+                    <p
+                      className="text-sm font-bold"
+                      style={{ color: "#d4838f" }}
+                    >
+                      ¥{item.price.toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* リピートTOP3 */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-rose-100">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                  <FontAwesomeIcon
+                    icon="redo"
+                    className="text-blue-500 text-xl"
+                  />
+                </div>
+                <h3
+                  className="text-xl font-semibold"
+                  style={{ color: "#d4838f" }}
+                >
+                  リピートTOP3
+                </h3>
+              </div>
+              <div className="space-y-3">
+                {RANKING_DATA.repeat.map((item) => (
+                  <div
+                    key={item.rank}
+                    className="flex items-center justify-between p-3 bg-rose-50 rounded-lg"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-rose-700 font-bold mr-2">
+                        {item.rank}
+                      </span>
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">
+                          {item.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          リピート率: {item.rate}
+                        </p>
+                      </div>
+                    </div>
+                    <p
+                      className="text-sm font-bold"
+                      style={{ color: "#d4838f" }}
+                    >
+                      ¥{item.price.toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* スキンケアTOP3 */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-rose-100">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mr-3">
+                  <FontAwesomeIcon
+                    icon="heart"
+                    className="text-pink-500 text-xl"
+                  />
+                </div>
+                <h3
+                  className="text-xl font-semibold"
+                  style={{ color: "#d4838f" }}
+                >
+                  スキンケアTOP3
+                </h3>
+              </div>
+              <div className="space-y-3">
+                {RANKING_DATA.skincare.map((item) => (
+                  <div
+                    key={item.rank}
+                    className="flex items-center justify-between p-3 bg-rose-50 rounded-lg"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-rose-700 font-bold mr-2">
+                        {item.rank}
+                      </span>
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">
+                          {item.name}
+                        </p>
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <FontAwesomeIcon
+                              key={i}
+                              icon="star"
+                              className={`text-xs ${
+                                i < Math.floor(item.rating)
+                                  ? "text-yellow-400"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                          <span className="text-xs text-gray-500 ml-1">
+                            {item.rating}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <p
+                      className="text-sm font-bold"
+                      style={{ color: "#d4838f" }}
+                    >
+                      ¥{item.price.toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-8">
+            <button className="px-8 py-3 rounded-full text-white font-medium shadow-lg transform hover:scale-105 transition-all duration-300 btn-primary">
+              すべてのランキングを見る
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Purchase Flow Section */}
+      <section
+        ref={purchaseRef}
+        className={`py-12 bg-gradient-to-br from-rose-50 to-white scroll-fade-in-up ${
+          purchaseVisible ? "visible" : ""
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2
+              className="text-3xl sm:text-4xl font-light mb-4"
+              style={{ color: "#d4838f", fontFamily: "Georgia, serif" }}
+            >
+              Purchase Flow
+            </h2>
+            <p className="text-gray-600 mb-4">ご購入までの流れ</p>
             <div
               className="w-24 h-1 mx-auto"
               style={{
@@ -231,7 +531,13 @@ export function HomePage() {
                     className="flex-shrink-0 w-[80vw] sm:w-1/4 snap-center px-2"
                   >
                     <div className="bg-white rounded-2xl shadow-lg p-6 text-center h-full">
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center btn-line">
+                      <div
+                        className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #4ade80, #22c55e)",
+                        }}
+                      >
                         <span className="text-white text-2xl font-bold">
                           {step.step}
                         </span>
@@ -256,7 +562,7 @@ export function HomePage() {
               {PURCHASE_STEPS.map((step, index) => (
                 <button
                   key={step.step}
-                  className="w-2 h-2 rounded-full"
+                  className="w-2 h-2 rounded-full purchase-dot"
                   style={{
                     backgroundColor: index === 0 ? "#d4838f" : "#ffe4e1",
                   }}
@@ -264,6 +570,22 @@ export function HomePage() {
                 />
               ))}
             </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="text-center mt-10">
+            <a
+              href={LINE_OFFICIAL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-3 px-8 py-4 rounded-full text-white font-medium shadow-lg transform hover:scale-105 transition-all duration-300 btn-line"
+            >
+              <FontAwesomeIcon icon={["fab", "line"]} className="text-2xl" />
+              <span>今すぐLINEで購入を始める</span>
+            </a>
+            <p className="text-xs text-gray-500 mt-3">
+              初回購入15%OFFクーポン配布中!
+            </p>
           </div>
         </div>
       </section>

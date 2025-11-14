@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/auth.service';
 import { useToast } from '../hooks/useToast';
+import { ToastContainer } from '../components/common/Toast';
 
 export function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ export function RegisterPage() {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { success, error: showError } = useToast();
+  const { toasts, success, error: showError, removeToast } = useToast();
 
   const handleChange = (e) => {
     setFormData({
@@ -53,6 +54,7 @@ export function RegisterPage() {
 
   return (
     <div className="min-h-screen pt-24 sm:pt-28 bg-mistyrose-gradient flex items-center justify-center">
+      <ToastContainer toasts={toasts} onClose={removeToast} />
       <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-xl">
         <h2 className="text-2xl font-light mb-6 text-gray-700">新規登録</h2>
         <form onSubmit={handleSubmit}>
